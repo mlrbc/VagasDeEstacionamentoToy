@@ -13,20 +13,19 @@
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li><g:link action="overview"><g:message code="default.overview.label" default="Over" /></g:link></li>
 			</ul>
 		</div>
 		<div id="list-vaga" class="content scaffold-list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
-				<div class="message" role="status">${flash.message}</div>
+			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<table>
-			<thead>
+				<thead>
 					<tr>
 					
 						<g:sortableColumn property="descricao" title="${message(code: 'vaga.descricao.label', default: 'Descricao')}" />
-					
-						<g:sortableColumn property="dataEntrada" title="${message(code: 'vaga.dataEntrada.label', default: 'Data Entrada')}" />
 					
 						<g:sortableColumn property="ocupada" title="${message(code: 'vaga.ocupada.label', default: 'Ocupada')}" />
 					
@@ -38,8 +37,6 @@
 					
 						<td><g:link action="show" id="${vagaInstance.id}">${fieldValue(bean: vagaInstance, field: "descricao")}</g:link></td>
 					
-						<td><g:formatDate date="${vagaInstance.dataEntrada}" /></td>
-					
 						<td><g:formatBoolean boolean="${vagaInstance.ocupada}" /></td>
 					
 					</tr>
@@ -47,7 +44,7 @@
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate total="${vagaInstanceCount ?: 0}" />
+				<g:paginate total="${vagaInstanceTotal}" />
 			</div>
 		</div>
 	</body>

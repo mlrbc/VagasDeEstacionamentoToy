@@ -8,9 +8,32 @@ class VagaController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
+    def index() {
+        redirect(action: "list", params: params)
+    }
+
+    def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Vaga.list(params), model:[vagaInstanceCount: Vaga.count()]
+        [vagaInstanceList: Vaga.list(params),
+         vagaInstanceTotal: Vaga.count()]
+    }
+
+    def overview(Integer max) {
+        list(max)
+    }
+
+    def select(Long id) {
+        def vaga = Vaga.get(id)
+        if (!vaga) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'vaga.label', default: 'Vaga'), id])
+            redirect(action: "overview")
+            return
+        }
+        vaga.select()
+        if (!vaga.save(flush: true)) {
+            flash.message = "Vaga não pode ser reservada! Problema interno na gravação!\n" + vaga.errors
+        }
+        redirect(action: "overview")
     }
 
     def show(Vaga vagaInstance) {
@@ -18,7 +41,7 @@ class VagaController {
     }
 
     def create() {
-        respond new Vaga(params)
+        respond new Vaga(params)       //  [vagaInstance: new Vaga(params)]
     }
 
     @Transactional
