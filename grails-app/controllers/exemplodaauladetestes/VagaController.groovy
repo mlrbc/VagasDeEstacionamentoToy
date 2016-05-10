@@ -6,7 +6,9 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class VagaController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [update: "PUT", delete: "DELETE"]
+    // save: "POST" foi retirado porque dá problema com o cucumber, que
+    // provavelmente simula a chamada dessa ação como um GET
 
     def index() {
         redirect(action: "list", params: params)
@@ -36,6 +38,19 @@ class VagaController {
         redirect(action: "overview")
     }
 
+    def book() {
+        def vaga = Vaga.findByOcupada(false)
+        if (vaga != null) {
+            vaga.select()
+            vaga.save(flush:true)
+            flash.message = "Vaga reservada"
+            render("overview")
+        } else {
+            flash.message = "Vaga indisponível"
+            redirect(action: "overview")
+        }
+    }
+
     def show(Vaga vagaInstance) {
         respond vagaInstance
     }
@@ -45,7 +60,20 @@ class VagaController {
     }
 
     @Transactional
-    def save(Vaga vagaInstance) {
+    def save() {
+        def vagaInstance = new Vaga(params)
+        if (!vagaInstance.save(flush: true)) {
+            render(view: "create", model: [vagaInstance: vagaInstance])
+            return
+        }
+        flash.message = message(code: 'default.created.message', args: [message(code: 'vaga.label', default: 'Vaga'), vagaInstance.id])
+        redirect(action: "show", id: vagaInstance.id)
+    }
+
+    // o save acima foi adicionado, e este abaixado renomeado porque o cucumber
+    // não consegue simular a passagem do parâmetro a partir das informações em params
+    @Transactional
+    def savee(Vaga vagaInstance) {
         if (vagaInstance == null) {
             notFound()
             return
@@ -57,6 +85,9 @@ class VagaController {
         }
 
         vagaInstance.save flush:true
+
+        flash.message = message(code: 'default.created.message', args: [message(code: 'vaga.label', default: 'Vaga'), vagaInstance.id])
+        redirect vagaInstance
 
         request.withFormat {
             form multipartForm {

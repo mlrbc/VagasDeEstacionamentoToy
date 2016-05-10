@@ -6,6 +6,10 @@ class Vaga {
     static hasMany = [historicoDeReservas:Reserva]
     Date dataEntrada
 
+    Vaga() {
+        historicoDeReservas = []
+    }
+
     def select() {
         if (ocupada) {
             def reserva = new Reserva(entrada: dataEntrada, saida: new Date(), vaga:this)
@@ -20,5 +24,10 @@ class Vaga {
     static constraints = {
         descricao blank: false
         dataEntrada nullable: true
+    }
+
+    @Override
+    String toString() {
+        return "<" + descricao + ", " + ocupada + " >"
     }
 }

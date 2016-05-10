@@ -1,5 +1,6 @@
 package support
 
+import exemplodaauladetestes.Vaga
 import geb.Browser
 import geb.binding.BindingUpdater
 import org.codehaus.groovy.grails.test.support.GrailsTestRequestEnvironmentInterceptor
@@ -14,6 +15,9 @@ Before () {
 }
 
 After () {
+    Vaga.list().each { vaga ->
+        vaga.delete(flush:true)
+    }
     scenarioInterceptor.destroy ()
     bindingUpdater.remove ()
 }
