@@ -44,11 +44,10 @@ class VagaController {
             vaga.select()
             vaga.save(flush:true)
             flash.message = "Vaga reservada"
-            render("overview")
         } else {
             flash.message = "Vaga indisponível"
-            redirect(action: "overview")
         }
+        redirect(action: "overview")
     }
 
     def show(Vaga vagaInstance) {
