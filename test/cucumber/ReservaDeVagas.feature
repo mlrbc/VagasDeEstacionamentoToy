@@ -19,3 +19,9 @@ Feature: reserva de vagas de estacionamento
      And eu vejo a vaga "e2" vazia
      When eu seleciono a vaga "e2"
      Then a vaga "e2" é marcada como ocupada
+
+  Scenario: selecionar vaga ocupada
+    Given: a vaga "e1" está ocupada
+    When: eu tento selecionar "e1"
+    Then: a vaga "e1" estará desocupada
+    And: o histórico de reservas de "e1" terá uma nova entrada
