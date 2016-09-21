@@ -94,3 +94,27 @@ Then(~/^O sistema reserva uma das vagas desocupadas$/) { ->
     assert (!ocupadasESemHistorico) == todasOcupadasESemHistorico(Vaga.list())
     // assert Vaga.findByDescricao("e3").ocupada
 }
+
+Given(~/^ a vaga "([^"]*" está ocupada$/) {String vaga ->
+    def controlador = new VagaController()
+    criarEReservarVaga(vaga,controlador)
+    assert findByOcupada(False) == null
+}
+
+When(~/^eu tento selecionar "([^"]*)"$/) {String vaga ->
+    def controlador = new VagaController()
+    controlador.select(vaga)
+}
+
+Then(~/^A vaga "([^"]*" estará desocupada$/) {String vaga ->
+    assert findByOcupada(False) != null
+}
+
+And(~/^ o histórico de reservas de "([^"]*" terá uma nova entrada$/) {String vaga ->
+    
+    
+    
+    
+    
+    
+    
