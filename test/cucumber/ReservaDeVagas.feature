@@ -25,3 +25,10 @@ Feature: reserva de vagas de estacionamento
     When: eu tento selecionar "e1"
     Then: a vaga "e1" estará desocupada
     And: o histórico de reservas de "e1" terá uma nova entrada
+    
+   Scenario: seleção de vaga ocupada
+    Given: eu criei as vagas "e1" e "e2"
+    And eu estou na página de visualização das vagas
+    And eu vejo a vaga "e2" ocupada
+    When eu seleciono a vaga "e2"
+    Then a vaga "e2" é marcada como livre
