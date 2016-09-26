@@ -112,9 +112,32 @@ Then(~/^A vaga "([^"]*" estará desocupada$/) {String vaga ->
 
 And(~/^ o histórico de reservas de "([^"]*" terá uma nova entrada$/) {String vaga ->
     
+Given(~/^ eu criei as vagas "[^"]*" e "[^"]*"$/) {String vaga1 , vaga2 ->
+   to CreatePage
+   at CreatePage
+   page.criarVaga(vaga1)
+   at VerPage
+   to CreatePage
+   at CreatePage
+   page.criarVaga(vaga2)    
+}
     
+And(~/^ eu estou na página de visualização das vagas$/) { ->
+    to Visualizacao
+    at Visualizacao
+}
+
+And(~/^ eu vejo a vaga "[^"]*" ocupada$/) {String vaga ->
+    at Visualizacao
+    assert page.vagaEstaOcupada(vaga)    
+}
     
+When(~/^ eu seleciono a vaga "[^"]*"$/) {String vaga ->   
+    at Visualizacao
+    page.selecionarVaga(vaga)
+}
     
-    
-    
-    
+Then(~/^ a vaga "[^"]*" é marcada como livre$/) {String vaga ->
+    at Visualizacao
+    assert page.vagaEstaLivre(vaga)
+}    
